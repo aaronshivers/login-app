@@ -1,0 +1,29 @@
+{
+  "name": "login-app-json",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha -t 50000 test/test.js"
+  },
+  "keywords": [],
+  "author": "aaron shivers",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "bcrypt": "^3.0.3",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^6.2.0",
+    "ejs": "^2.6.1",
+    "expect": "^23.6.0",
+    "express": "^4.16.4",
+    "helmet": "^3.15.0",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "mocha": "^5.2.0",
+    "mongoose": "^5.4.0",
+    "remove": "^0.1.5",
+    "supertest": "^3.3.0",
+    "validator": "^10.10.0"
+  }
+}
