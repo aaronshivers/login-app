@@ -100,6 +100,11 @@ router.get('/profile', authenticateUser, (req, res) => {
   res.send('You are logged in.')
 })
 
+// GET /login
+router.get('/login', (req, res) => {
+  res.render('login')
+})
+
 // POST /login
 router.post('/login', (req, res) => {
   const { email, password } = req.body
@@ -127,7 +132,7 @@ router.get('/admin', authenticateAdmin, (req, res) => {
 })
 
 // DELETE /logout
-router.delete('/logout', authenticateUser, (req, res) => {
+router.get('/logout', authenticateUser, (req, res) => {
   res.clearCookie('token').send(`You've been logged out.`)
 })
 
