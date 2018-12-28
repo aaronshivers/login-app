@@ -367,7 +367,7 @@ describe('DELETE /logout', () => {
   it('should logout user and delete auth token', (done) => {
     const cookie = `token=${tokens[0]}`
     request(app)
-      .delete('/logout')
+      .get('/logout')
       .set('Cookie', cookie)
       .expect(200)
       .expect((res) => {

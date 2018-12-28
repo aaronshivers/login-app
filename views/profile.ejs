@@ -1,0 +1,37 @@
+<% include partials/top %>
+
+<div id="homeContainer" class="container">
+
+  <h1 class="text-center">Profile Page</h1>
+
+  <table class="table">
+    
+    <thead class="table-dark">
+      
+      <tr>
+        
+        <th>Email</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+      
+      <tr>
+        
+        <th><%= user.email %></th>
+
+      </tr>
+
+    </tbody>
+
+  </table>
+
+  <a class="btn btn-outline-primary btn-block" href="/users/<%= user._id %>/edit">Edit User</a>
+
+  </div>
+
+</div>
+
+<% include partials/bottom %>

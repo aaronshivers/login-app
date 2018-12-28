@@ -1,6 +1,7 @@
 const express =  require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const User = require('../models/user-model')
 const validatePassword = require('../middleware/validate-password')
@@ -25,7 +26,7 @@ router.post('/users', (req, res) => {
   if (validatePassword(newUser.password)) {
     user.save().then((user) => {
       createToken(user).then((token) => {
-        res.cookie('token', token, cookieExpiration).status(201).send(user)
+        res.cookie('token', token, cookieExpiration).status(201).redirect(`/profile`)
       }).catch(err => res.status(500).send(err.message))
     }).catch(err => res.status(400).send(err.message))
   } else {
@@ -39,18 +40,18 @@ router.get('/users', authenticateAdmin, (req, res) => {
     if (users.length === 0) {
       res.status(404).send('Sorry, the database must be empty.')
     } else {
-      res.send(users)
+      res.render('users', { users })
     }
   })
 })
 
 // GET /users/:id
-router.get('/users/:id', authenticateUser, (req, res) => {
+router.get('/users/:id/view', authenticateUser, (req, res) => {
   const { id } = req.params
 
   User.findById(id).then((user) => {
     if (user) {
-      res.send(user)
+      res.render('view', { user })
     } else {
       res.status(404).send('Sorry, that user id is not in our database.')
     }
@@ -70,6 +71,15 @@ router.delete('/users/:id', authenticateUser, (req, res) => {
   })
 })
 
+// GET /users/:id/edit
+router.get('/users/:id/edit', authenticateUser, (req, res) => {
+  const { id } = req.params
+
+  User.findById(id).then((user) => {
+    res.render('edit', { user })
+  })
+})
+
 // PATCH /users/:id
 router.patch('/users/:id', authenticateUser, (req, res) => {
   const { id } = req.params
@@ -84,7 +94,7 @@ router.patch('/users/:id', authenticateUser, (req, res) => {
 
       User.findByIdAndUpdate(id, { email, password: hash }, options).then((user) => {
         if (user) {
-          res.status(201).send(user)
+          res.status(201).redirect(`/users/${ id }/view`)
         } else {
           res.status(404).send('Sorry, that user Id was not found in our database.')
         }
@@ -97,9 +107,19 @@ router.patch('/users/:id', authenticateUser, (req, res) => {
 
 // GET /profile
 router.get('/profile', authenticateUser, (req, res) => {
-  res.send('You are logged in.')
-})
+  const token = req.cookies.token
+  const secret = process.env.JWT_SECRET
+  const decoded = jwt.verify(token, secret)
+  const { _id } = decoded
 
+  User.findById(_id).then((user) => {
+    if (user) {
+      res.render('profile', { user })
+    } else {
+      res.status(404).send('Sorry, that user id is not in our database.')
+    }
+  })
+})
 // GET /login
 router.get('/login', (req, res) => {
   res.render('login')
@@ -114,7 +134,7 @@ router.post('/login', (req, res) => {
       bcrypt.compare(password, user.password, (err, hash) => {
         if (hash) {
           createToken(user).then((token) => {
-            res.cookie('token', token, cookieExpiration).status(200).send(user)
+            res.cookie('token', token, cookieExpiration).status(200).redirect(`/profile`)
           })
         } else {
           res.status(401).send('Please check your login credentials, and try again.')
@@ -128,12 +148,17 @@ router.post('/login', (req, res) => {
 
 // GET /admin
 router.get('/admin', authenticateAdmin, (req, res) => {
-  res.send('If you can see this, you must be an admin.')
+  res.render('admin')
 })
 
-// DELETE /logout
+// GET /signup
+router.get('/signup', (req, res) => {
+  res.render('signup')
+})
+
+// GET /logout
 router.get('/logout', authenticateUser, (req, res) => {
-  res.clearCookie('token').send(`You've been logged out.`)
+  res.clearCookie('token').redirect(`/`)
 })
 
 module.exports = router

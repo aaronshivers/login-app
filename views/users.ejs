@@ -1,0 +1,35 @@
+<% include partials/top %>
+
+<div id="homeContainer" class="container">
+
+  <h1 class="text-center">Users List</h1>
+
+  <table class="table">
+    
+    <thead class="table-dark">
+      
+      <tr>
+        
+        <th>Email</th>
+        <th>Admin</th>
+
+      </tr>
+
+    </thead>
+
+    <tbody>
+      <% users.forEach((user) => { %>
+      <tr>
+        
+        <th><a href="/users/<%= user._id %>/view"><%= user.email %></a></th>
+        <th><%= user.admin %></th>
+
+      </tr>
+      <% }) %>
+    </tbody>
+
+  </table>
+
+</div>
+
+<% include partials/bottom %>

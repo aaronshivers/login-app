@@ -4,6 +4,7 @@ const express = require('express')
 const mongoose = require('./db/mongoose')
 const cookieParser = require('cookie-parser')
 const helmet = require('helmet')
+const methodOverride = require('method-override')
 
 const app = express()
 const port = process.env.PORT
@@ -17,6 +18,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(express.static('public'))
+app.use(methodOverride('_method'))
 
 app.use(userRoutes)
 
