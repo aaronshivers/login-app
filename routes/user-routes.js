@@ -26,7 +26,7 @@ router.post('/users', (req, res) => {
   if (validatePassword(newUser.password)) {
     user.save().then((user) => {
       createToken(user).then((token) => {
-        res.cookie('token', token, cookieExpiration).status(201).redirect(`/profile`)
+        res.cookie('token', token, cookieExpiration).status(201).render(`profile`, { user })
       }).catch(err => res.status(500).send(err.message))
     }).catch(err => res.status(400).send(err.message))
   } else {
