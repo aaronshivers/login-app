@@ -126,4 +126,9 @@ router.get('/admin', authenticateAdmin, (req, res) => {
   res.send('If you can see this, you must be an admin.')
 })
 
+// DELETE /logout
+router.delete('/logout', authenticateUser, (req, res) => {
+  res.clearCookie('token').send(`You've been logged out.`)
+})
+
 module.exports = router

@@ -10,6 +10,8 @@ const port = process.env.PORT
 
 const userRoutes = require('./routes/user-routes')
 
+app.set('view engine', 'ejs')
+
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
